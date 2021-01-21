@@ -1,0 +1,5 @@
+[user]
+default=wsluser
+
+[wsl2]
+kernelCommandLine="ds=nocloud;seedfrom=/mnt/c/opt/wsl/cloud-init/" # NOTE: Trailing slash of seedfrom is important

@@ -1,0 +1,39 @@
+#cloud-config
+users:
+  - name: wsluser
+    gecos: "Firstname Lastname"
+    shell: /bin/bash
+    groups: sudo
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+
+timezone: Europe/Zurich
+locale: en_US.UTF-8
+
+ssh_deletekeys: false
+ssh_genkeytypes:
+  - rsa
+  - ed25519
+
+mounts:
+  - ["tmpfs", /ram, "tmpfs", "mode=1777,size=2048m"]
+
+packages:
+  - git
+  - python3-pip
+
+bootcmd:
+  - date > /tmp/helloCloudInit
+
+runcmd:
+  - pip3 install ansible
+  - date >> /tmp/helloCloudInit
+
+final_message: "cloud-init done"
+
+# ca-certs:
+#   remove-defaults: false
+#   trusted:
+#     - |
+#       -----BEGIN CERTIFICATE-----
+#       YOUR-ORGS-TRUSTED-CA-CERT-HERE
+#       -----END CERTIFICATE-----
