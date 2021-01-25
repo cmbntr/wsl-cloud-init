@@ -29,9 +29,15 @@ set -o pipefail
 set -eu
 exec 2>&1
 
-export DEBUG_PROC_CMDLINE
-DEBUG_LEVEL="$CLEAN" DI_LOG=stderr /usr/lib/cloud-init/ds-identify --force
+DSIDENTIFY="/usr/lib/cloud-init/ds-identify"
+if [ ! -x $DSIDENTIFY ]; then
+  DSIDENTIFY="$(find /usr -path '*/cloud-init/ds-identify' | head -n 1)"
+fi
 
+export DEBUG_PROC_CMDLINE
+DEBUG_LEVEL="$CLEAN" DI_LOG=stderr $DSIDENTIFY --force
+
+cloud-init --version
 cloud-init init --local
 cloud-init init
 cloud-init modules --mode=config

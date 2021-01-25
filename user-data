@@ -1,9 +1,22 @@
+## template: jinja
 #cloud-config
+{# --------------------------------------------------------------------------------------- #}
+{# https://cloudinit.readthedocs.io/en/latest/topics/instancedata.html#using-instance-data #}
+{% if  v1.distro in ['fedora', 'centos', 'redhat' ] %}
+{%      set groups = 'wheel' %}
+{% elif v1.distro in ['alpine'] %}
+{%      set groups = 'sudo' %}
+{% else %}
+{%      set groups = 'sudo' %}
+{% endif %}
+{# cloud-init devel render /mnt/c/opt/wsl/cloud-init/user-data                             #}
+{# --------------------------------------------------------------------------------------- #}
+
 users:
   - name: wsluser
     gecos: "Firstname Lastname"
     shell: /bin/bash
-    groups: sudo
+    groups: {{ groups }}
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
 
 timezone: Europe/Zurich
@@ -16,6 +29,8 @@ ssh_genkeytypes:
 
 mounts:
   - ["tmpfs", /ram, "tmpfs", "mode=1777,size=2048m"]
+  - ["debugfs", /sys/kernel/debug, "debugfs"]
+
 
 packages:
   - git
